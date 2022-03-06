@@ -11,7 +11,7 @@ start_time=time.time()
 STUFF={}
 rar={}
 client = telethon.TelegramClient(None, api_id=API_ID , api_hash=API_HASH).start(bot_token=BOT_TOKEN)
-acc =[1303790979,1854668908]
+acc =[]
 
 async def get_user_join(e):
     try:
