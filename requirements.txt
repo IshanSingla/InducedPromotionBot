@@ -2,3 +2,4 @@ heroku3
 telethon
 telegraph
 psutil
+firebase_admin
