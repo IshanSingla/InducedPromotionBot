@@ -1,17 +1,40 @@
-import telethon,os,asyncio,sys,shutil,time,psutil
-from telethon.errors.rpcerrorlist import PhoneCodeExpiredError, FloodWaitError, PhoneCodeInvalidError, PhoneNumberBannedError, PhoneNumberInvalidError, UserBannedInChannelError, PeerFloodError, UserPrivacyRestrictedError, UserAlreadyParticipantError,  UserBannedInChannelError, UserAlreadyParticipantError,  UserPrivacyRestrictedError, ChatAdminRequiredError, ChatWriteForbiddenError, UserChannelsTooMuchError, UserNotParticipantError,ChannelPrivateError, SessionPasswordNeededError, UserBannedInChannelError
-
+import telethon,os,asyncio,sys,shutil,time,psutil,firebase_admin,logging,datetime
+from telethon.errors.rpcerrorlist import PhoneCodeExpiredError, FloodWaitError, PhoneCodeInvalidError, PhoneNumberBannedError, PhoneNumberInvalidError, SessionPasswordNeededError
 from telegraph import upload_file 
+from firebase_admin import credentials,db
+
+cred = credentials.Certificate('1.json')
+default_app = firebase_admin.initialize_app( cred,{'databaseURL':"https://about-ishan-default-rtdb.asia-southeast1.firebasedatabase.app/"})
 API_ID= 12468937
 API_HASH= "84355e09d8775921504c93016e1e9438"
 BOT_TOKEN = "5180127494:AAH876Hx-5WP9IqPNtFO4EvkozVmO-BjMY8"
-OWNERS=[1303790979]
+OWNERS=[1303790979,1854668908]
 Premium=[1303790979,1854668908]
+Sub=(db.reference(f"/Admin/Premium/")).get()
+if Sub == None:
+    Sub=[]
+channel="InducedBots"
+for row in Sub:
+    row=str(row).split()
+    d = datetime.today() - datetime.strptime(f"{row[1]}", '%Y-%m-%d')
+    r = datetime.strptime("2021-12-01", '%Y-%m-%d') - datetime.strptime("2021-11-03", '%Y-%m-%d')
+    if d<=r:
+        Premium.append(int(row[0]))
+start_time=time.time()
+rar={}
+
+logging.basicConfig(
+    level=logging.WARNING,
+    handlers=[logging.FileHandler('log.txt')],
+    format="\n\n%(asctime)s:    %(message)s"
+)
+LOGGER = logging.getLogger(__name__)
+logging.getLogger("telethon").setLevel(logging.WARNING)
 start_time=time.time()
 STUFF={}
 rar={}
 client = telethon.TelegramClient(None, api_id=API_ID , api_hash=API_HASH).start(bot_token=BOT_TOKEN)
-acc =[]
+acc =[1303790979,1854668908]
 
 async def get_user_join(e):
     try:
@@ -243,21 +266,23 @@ async def _(e):
             os.execl(sys.executable, sys.executable, "-m", "main")
 
     elif e.data == b"Sudo":
-        if not await get_user_join(e):
-            return
-        async with client.conversation(e.chat_id) as x:
+        async with e.client.conversation(e.chat_id) as x:
             await x.send_message(f"Send Userid of To Give Sudo")
             try:
                 id= await x.get_response(timeout=600)
                 if id.text=="/start" or id.text=="/help":
                     return
-                
             except TimeoutError:
                 await x.send_message("Time Limit Reached of 5 Min.")
                 return
+            re=datetime.date.today()
+            sub=re+(datetime.strptime("2021-12-01", '%Y-%m-%d') - datetime.strptime("2021-11-03", '%Y-%m-%d'))
             Premium.append(int(id.text))
+            Sub.append(f"{id.text} {re}")
+            ref=(db.reference(f"/Admin/Premium/")).set(Sub)
             await x.send_message(f"Sudo Given To `{id.text}`")
-            await client.send_message(int(id.text),f"Sudo Given To `{id.text}`")
+            await e.client.send_message(int(id.text),f"Congratulation Your Subscription Has been Sucessfully started.\nYou are now Premium till {sub}\n\nMade With ❤️ By @{channel}")
+
 
 
 def humanbytes(size):
