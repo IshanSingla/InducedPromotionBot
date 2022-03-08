@@ -361,6 +361,10 @@ async def inline_alive(o):
         switch_pm="👥 Induced Promotion Bot",
         switch_pm_param="start",
     )
+@client.on(telethon.events.NewMessage(incoming=True, pattern='/logs', func=lambda e: e.is_private))
+async def logAddee(e):
+    if e.chat.id in OWNERS:
+        await client.send_file(e.chat_id,"log.txt",caption="Your Logs Here",force_document=True)
 
 print("""
 ╔════╗
