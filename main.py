@@ -276,7 +276,7 @@ async def _(e):
             except TimeoutError:
                 await x.send_message("Time Limit Reached of 5 Min.")
                 return
-            re=datetime.today()
+            re=datetime.date.today()
             suib=re+(datetime.strptime("2021-12-01", '%Y-%m-%d') - datetime.strptime("2021-11-03", '%Y-%m-%d'))
             Premium.append(int(id.text))
             Sub.append(f"{id.text} {re}")
