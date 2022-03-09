@@ -277,12 +277,12 @@ async def _(e):
                 await x.send_message("Time Limit Reached of 5 Min.")
                 return
             re=datetime.date.today()
-            sub=re+(datetime.strptime("2021-12-01", '%Y-%m-%d') - datetime.strptime("2021-11-03", '%Y-%m-%d'))
+            suib=re+(datetime.strptime("2021-12-01", '%Y-%m-%d') - datetime.strptime("2021-11-03", '%Y-%m-%d'))
             Premium.append(int(id.text))
             Sub.append(f"{id.text} {re}")
             ref=(db.reference(f"/Admin/Premium/")).set(Sub)
             await x.send_message(f"Sudo Given To `{id.text}`")
-            await e.client.send_message(int(id.text),f"Congratulation Your Subscription Has been Sucessfully started.\nYou are now Premium till {sub}\n\nMade With ❤️ By @{channel}")
+            await e.client.send_message(int(id.text),f"Congratulation Your Subscription Has been Sucessfully started.\nYou are now Premium till {suib}\n\nMade With ❤️ By @{channel}")
 
 
 
