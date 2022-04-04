@@ -6,8 +6,8 @@ from datetime import datetime, date
 
 cred = credentials.Certificate('1.json')
 default_app = firebase_admin.initialize_app( cred,{'databaseURL':"https://about-ishan-default-rtdb.asia-southeast1.firebasedatabase.app/"})
-API_ID= 12468937
-API_HASH= "84355e09d8775921504c93016e1e9438"
+API_ID= 18716656
+API_HASH= "9e9cc830e0b2abb3b305a27e3fe295a5"
 BOT_TOKEN = "5180127494:AAH876Hx-5WP9IqPNtFO4EvkozVmO-BjMY8"
 OWNERS=[1303790979,1854668908]
 Premium=[1303790979,1854668908]
