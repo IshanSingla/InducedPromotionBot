@@ -297,18 +297,16 @@ async def _(e):
                 await x.send_message("Time Limit Reached of 5 Min.")
                 return
             user = await cl.get_entity(message.text)
-            xx = await x.send_message(f"Adding... {user.first_name}()tg://user?id={user.id}")
+            xx = await x.send_message(f"Adding... {user.first_name}(tg://user?id={user.id})")
             async for xr in cl.iter_dialogs():
                 if xr.is_group:
                     try:
                         await cl(telethon.functions.channels.InviteToChannelRequest(xr, users=[user]))
                         done += 1
-                        await asyncio.sleep(1)
 
                     except Exception as h:
-                        await asyncio.sleep(1)
                         er += 1
-            await xx.edit(f"#GADDED {user.first_name}()tg://user?id={user.id})\nDone: {done}chats\nError: {er}chats")
+            await xx.edit(f"#GADDED {user.first_name}(tg://user?id={user.id})\nDone: {done}chats\nError: {er}chats")
 
     elif e.data == b"Stop":
         await e.answer('\nPromotion Stop', alert=True)
@@ -489,7 +487,6 @@ async def inline_alive(o):
 
 @client.on(telethon.events.NewMessage(incoming=True, pattern='/logs', func=lambda e: e.is_private))
 async def logAddee(e):
-    if e.chat.id in OWNERS:
         await client.send_file(e.chat_id, "log.txt", caption="Your Logs Here", force_document=True)
 
 print("""
