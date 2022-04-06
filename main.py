@@ -221,7 +221,7 @@ async def _(e):
                 await x.send_message(f"Done in {done} chats, error in {er} chat(s)")
                 await asyncio.sleep(500)
 
-    elif e.data == b"Gcast":
+    elif e.data == b"Gadd":
         if not await get_user_join(e):
             return
         if not e.query.user_id in Premium:
