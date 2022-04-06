@@ -298,6 +298,8 @@ async def _(e):
                 return
             user = await cl.get_entity(message.text)
             xx = await x.send_message(f"Adding... {user.first_name}(tg://user?id={user.id})")
+            done=0
+            er=0
             async for xr in cl.iter_dialogs():
                 if xr.is_group:
                     try:
