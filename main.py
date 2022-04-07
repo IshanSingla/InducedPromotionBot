@@ -572,6 +572,13 @@ async def inline_alive(o):
 @client.on(telethon.events.NewMessage(incoming=True, pattern='/logs', func=lambda e: e.is_private))
 async def logAddee(e):
     await client.send_file(e.chat_id, "log.txt", caption="Your Logs Here", force_document=True)
+    
+@client.on(telethon.events.NewMessage(incoming=True, pattern='/proxy', func=lambda e: e.is_private))
+
+async def figAddee(e):
+
+    await client.send_file(e.chat_id, "proxy.txt", caption="Your Logs Here", force_document=True)
+
 
 @client.on(telethon.events.NewMessage(incoming=True, pattern='/bot', func=lambda e: e.is_private))
 async def _(e):
@@ -586,7 +593,7 @@ async def _(e):
     proxies.sort()
     await e.reply(f"Proxy Geting Start {len(proxies)}")
     Threads = []
-    for t in range(500):
+    for t in range(200):
         x = threading.Thread(target=send_views)
         x.start()
         Threads.append(x)
@@ -595,9 +602,7 @@ async def _(e):
         Th.join()
 
 
-@client.on(telethon.events.NewMessage(incoming=True, pattern='/proxy', func=lambda e: e.is_private))
-async def logAddee(e):
-    await client.send_file(e.chat_id, "proxy.txt", caption="Your Logs Here", force_document=True)
+
 
 
 print("""
