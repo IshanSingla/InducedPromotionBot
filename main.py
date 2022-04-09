@@ -35,8 +35,8 @@ default_app = initialize_app(
         'databaseURL': "https://about-ishan-default-rtdb.asia-southeast1.firebasedatabase.app/"
     }
 )
-API_ID = 18716656
-API_HASH = "9e9cc830e0b2abb3b305a27e3fe295a5"
+API_ID = 15959756
+API_HASH = "78ab104e0d7f80497655a6129832deed"
 BOT_TOKEN = "5180127494:AAH876Hx-5WP9IqPNtFO4EvkozVmO-BjMY8"
 OWNERS = [1303790979, 1854668908]
 Premium = [1303790979, 1854668908]
