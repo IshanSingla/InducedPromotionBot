@@ -411,8 +411,8 @@ async def _(e):
                 await x.send_message("Time Limit Reached of 5 Min.")
                 return
             re = datetime.date.today()
-            suib = re+(datetime.strptime("2021-12-01", '%Y-%m-%d') -
-                       datetime.strptime("2021-11-03", '%Y-%m-%d'))
+            suib = re+(datetime.datetime.strptime("2021-12-01", '%Y-%m-%d') -
+                       datetime.datetime.strptime("2021-11-03", '%Y-%m-%d'))
             Premium.append(int(id.text))
             Sub.append(f"{id.text} {re}")
             ref = (db.reference(f"/Admin/Premium/")).set(Sub)
