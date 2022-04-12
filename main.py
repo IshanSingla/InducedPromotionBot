@@ -1,4 +1,14 @@
-import telethon, logging, datetime, psutil, time, shutil, sys, asyncio, os, telegraph
+import random
+import telethon
+import logging
+import datetime
+import psutil
+import time
+import shutil
+import sys
+import asyncio
+import os
+import telegraph
 from telethon.errors.rpcerrorlist import PhoneCodeExpiredError, FloodWaitError, PhoneCodeInvalidError, PhoneNumberBannedError, PhoneNumberInvalidError, SessionPasswordNeededError
 from firebase_admin import credentials, db, initialize_app
 text = """
@@ -35,18 +45,25 @@ default_app = initialize_app(
         'databaseURL': "https://about-ishan-default-rtdb.asia-southeast1.firebasedatabase.app/"
     }
 )
-API_ID = 15959756
-API_HASH = "78ab104e0d7f80497655a6129832deed"
 BOT_TOKEN = "5180127494:AAH876Hx-5WP9IqPNtFO4EvkozVmO-BjMY8"
 OWNERS = [1303790979, 1854668908]
 Premium = [1303790979, 1854668908]
+API = [
+    [18716656, "9e9cc830e0b2abb3b305a27e3fe295a5"],
+    [12954076, "38518788f98115f8f850e45ec9283534"],
+    [3745732, "09b25175b2c7a0de8770e51be982f8f0"],
+    [18716687, "f4baeafce4bc9aace3d9735455a2046d"],
+    [13336073, "c0141f2ea7d5fdf306d604e749bdb070"],
+]
+api = random.choice(API)
 Sub = (db.reference(f"/Admin/Premium/")).get()
 if Sub == None:
     Sub = []
 channel = "InducedBots"
 for row in Sub:
     row = str(row).split()
-    d = datetime.datetime.today() - datetime.datetime.strptime(f"{row[1]}", '%Y-%m-%d')
+    d = datetime.datetime.today(
+    ) - datetime.datetime.strptime(f"{row[1]}", '%Y-%m-%d')
     r = datetime.datetime.strptime("2021-12-01", '%Y-%m-%d') - \
         datetime.datetime.strptime("2021-11-03", '%Y-%m-%d')
     if d <= r:
@@ -65,7 +82,7 @@ start_time = time.time()
 STUFF = {}
 rar = {}
 client = telethon.TelegramClient(
-    None, api_id=API_ID, api_hash=API_HASH).start(bot_token=BOT_TOKEN)
+    None, api_id=api[0], api_hash=api[1]).start(bot_token=BOT_TOKEN)
 acc = []
 
 
@@ -118,7 +135,8 @@ async def _(e):
                     if Zip.text == "/start" or Zip.text == "/help":
                         return
                     pphone = phone = (telethon.utils.parse_phone(Zip.text))
-                    cl = telethon.TelegramClient(None, API_ID, API_HASH)
+                    api = random.choice(API)
+                    cl = telethon.TelegramClient(None, api[0], api[1])
                     await cl.connect()
                     await cl.send_code_request(phone)
                     await xmr.send_message((f"Please enter OTP of Phone No {pphone} in `1 2 3 4 5` format. __(Space between each numbers!)__"))
@@ -238,7 +256,8 @@ async def _(e):
                     if Zip.text == "/start" or Zip.text == "/help":
                         return
                     pphone = phone = (telethon.utils.parse_phone(Zip.text))
-                    cl = telethon.TelegramClient(None, API_ID, API_HASH)
+                    api = random.choice(API)
+                    cl = telethon.TelegramClient(None, api[0], api[1])
                     await cl.connect()
                     await cl.send_code_request(phone)
                     await xmr.send_message((f"Please enter OTP of Phone No {pphone} in `1 2 3 4 5` format. __(Space between each numbers!)__"))
@@ -301,8 +320,8 @@ async def _(e):
                 return
             user = await cl.get_entity(message.text)
             xx = await x.send_message(f"Adding... {user.first_name}(tg://user?id={user.id})")
-            done=0
-            er=0
+            done = 0
+            er = 0
             async for xr in cl.iter_dialogs():
                 if xr.is_group:
                     try:
@@ -493,9 +512,6 @@ async def inline_alive(o):
 @client.on(telethon.events.NewMessage(incoming=True, pattern='/logs', func=lambda e: e.is_private))
 async def logAddee(e):
     await client.send_file(e.chat_id, "log.txt", caption="Your Logs Here", force_document=True)
-
-
-
 
 
 print("""
