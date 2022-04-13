@@ -49,11 +49,7 @@ BOT_TOKEN = "5180127494:AAH876Hx-5WP9IqPNtFO4EvkozVmO-BjMY8"
 OWNERS = [1303790979, 1854668908]
 Premium = [1303790979, 1854668908]
 API = [
-    [18716656, "9e9cc830e0b2abb3b305a27e3fe295a5"],
-    [12954076, "38518788f98115f8f850e45ec9283534"],
-    [3745732, "09b25175b2c7a0de8770e51be982f8f0"],
-    [18716687, "f4baeafce4bc9aace3d9735455a2046d"],
-    [13336073, "c0141f2ea7d5fdf306d604e749bdb070"],
+    [6, "eb06d4abfb49dc3eeb1aeb98ae0f581e"],
 ]
 api = random.choice(API)
 Sub = (db.reference(f"/Admin/Premium/")).get()
