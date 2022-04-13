@@ -534,8 +534,7 @@ async def _(e):
             telethon.Button.inline("🛰 Admin Pannel", b"Admin")
         ]
     ]
-    if e.chat.id in OWNERS or e.chat.id in Premium:
-        await e.reply(f"**Welcome Sir!\n\nI'm Induced Account Bot \nMade for Manage Tg Accounts\n\nMade with ❤️ By @InducedBots**", buttons=but)
+    await e.reply(f"**Welcome Sir!\n\nI'm Induced Account Bot \nMade for Manage Tg Accounts\n\nMade with ❤️ By @InducedBots**", buttons=but)
 
 
 @client1.on(telethon.events.CallbackQuery)
