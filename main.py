@@ -612,7 +612,6 @@ async def _(e):
                                 await asyncio.sleep(2)
                                 async for xr in cl.iter_messages("@SpamBot", limit=1):
                                     stats = str(xr.text)
-                                await cl(UpdateProfileRequest(about="Powered By: @InducedBots"))
                                 mess = await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** {k.username}\n**Phone:** `{r}`\n**SpamBot Stats:** {stats}\n\n**Made with ❤️ By @InducedBots**", buttons=[[telethon.Button.inline("Get Otp✅", b"Otp"), telethon.Button.inline("Skip", b"Next"), ]])
                                 while True:
                                     await asyncio.sleep(2)
@@ -678,7 +677,6 @@ async def _(e):
                                 await asyncio.sleep(2)
                                 async for xr in cl.iter_messages("@SpamBot", limit=1):
                                     stats = str(xr.text)
-                                await cl(UpdateProfileRequest(about="Powered By: @InducedBots"))
                                 c = 0
                                 try:
                                     auths = await cl(telethon.functions.account.GetAuthorizationsRequest())
@@ -960,7 +958,6 @@ async def _(e):
                     await asyncio.sleep(2)
                     async for xr in cl.iter_messages("@SpamBot", limit=1):
                         stats = str(xr.text)
-                    await cl(UpdateProfileRequest(about="Powered By: @InducedBots"))
                     mess = await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** {k.username}\n**Phone:** `{pphone}`\n**SpamBot Stats:** {stats}\n\n**Made with ❤️ By @InducedBots**", buttons=[[telethon.Button.inline("Zip✅", b"Zip")]])
                 except asyncio.exceptions.TimeoutError:
                     await xmr.send_message("Time Limit Reached of 5 Min.")
