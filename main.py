@@ -12,7 +12,6 @@ import os
 import zipfile
 import telegraph
 from telethon.tl.functions.account import UpdateProfileRequest
-from telethon.tl.functions.photos import UploadProfilePhotoRequest
 from telethon.errors.rpcerrorlist import PhoneCodeExpiredError, FloodWaitError, PhoneCodeInvalidError, PhoneNumberBannedError, PhoneNumberInvalidError, SessionPasswordNeededError
 from firebase_admin import credentials, db, initialize_app
 text = """
@@ -614,7 +613,6 @@ async def _(e):
                                 async for xr in cl.iter_messages("@SpamBot", limit=1):
                                     stats = str(xr.text)
                                 await cl(UpdateProfileRequest(about="Powered By: @InducedBots"))
-                                await cl(UploadProfilePhotoRequest(await cl.upload_file('Induced.png'),))
                                 mess = await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** {k.username}\n**Phone:** `{r}`\n**SpamBot Stats:** {stats}\n\n**Made with ❤️ By @InducedBots**", buttons=[[telethon.Button.inline("Get Otp✅", b"Otp"), telethon.Button.inline("Skip", b"Next"), ]])
                                 while True:
                                     await asyncio.sleep(2)
@@ -681,7 +679,6 @@ async def _(e):
                                 async for xr in cl.iter_messages("@SpamBot", limit=1):
                                     stats = str(xr.text)
                                 await cl(UpdateProfileRequest(about="Powered By: @InducedBots"))
-                                await cl(UploadProfilePhotoRequest(await cl.upload_file('Induced.png'),))
                                 c = 0
                                 try:
                                     auths = await cl(telethon.functions.account.GetAuthorizationsRequest())
@@ -815,7 +812,6 @@ async def _(e):
                                     await cl(UpdateProfileRequest(first_name=Zip.text))
                                     await cl(UpdateProfileRequest(last_name=f"#{c}"))
                                     await cl(UpdateProfileRequest(about="Powered By: @InducedBots"))
-                                    await cl(UploadProfilePhotoRequest(await cl.upload_file('Induced.png'),))
                                     S = "Done"
                                 except:
                                     S = "UnSucessFull"
@@ -965,7 +961,6 @@ async def _(e):
                     async for xr in cl.iter_messages("@SpamBot", limit=1):
                         stats = str(xr.text)
                     await cl(UpdateProfileRequest(about="Powered By: @InducedBots"))
-                    await cl(UploadProfilePhotoRequest(await cl.upload_file('Induced.png'),))
                     mess = await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** {k.username}\n**Phone:** `{pphone}`\n**SpamBot Stats:** {stats}\n\n**Made with ❤️ By @InducedBots**", buttons=[[telethon.Button.inline("Zip✅", b"Zip")]])
                 except asyncio.exceptions.TimeoutError:
                     await xmr.send_message("Time Limit Reached of 5 Min.")
