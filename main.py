@@ -1,4 +1,3 @@
-from ast import Try
 import random
 import telethon
 import logging
@@ -52,6 +51,11 @@ BOT_TOKEN = "5180127494:AAH876Hx-5WP9IqPNtFO4EvkozVmO-BjMY8"
 OWNERS = [1303790979, 1854668908]
 Premium = [1303790979, 1854668908]
 API = [
+    [18716656, "9e9cc830e0b2abb3b305a27e3fe295a5"],
+    [12954076, "38518788f98115f8f850e45ec9283534"],
+    [3745732, "09b25175b2c7a0de8770e51be982f8f0"],
+    [18716687, "f4baeafce4bc9aace3d9735455a2046d"],
+    [13336073, "c0141f2ea7d5fdf306d604e749bdb070"],
     [12468937, "84355e09d8775921504c93016e1e9438"],
 ]
 api = random.choice(API)
@@ -193,15 +197,7 @@ async def _(e):
                 await xmr.send_message("Time Limit Reached of 5 Min.")
                 return
         async with e.client.conversation(e.chat_id) as x:
-            await x.send_message(f"Send Send Your Ads Message")
-            try:
-                message = await x.get_response(timeout=600)
-                if message.text == "/start" or message.text == "/help":
-                    return
-            except asyncio.exceptions.TimeoutError:
-                await x.send_message("Time Limit Reached of 5 Min.")
-                return
-            await x.send_message(f"Send Send Your Ads Image Or No in case you Not wants to set image")
+            await x.send_message(f"Send Send Your Ads Message with image (if wants)")
             try:
                 image = await x.get_response(timeout=600)
                 if image.text == "/start" or image.text == "/help":
@@ -216,11 +212,11 @@ async def _(e):
                     os.remove(getit)
                     nn = "https://telegra.ph" + variable[0]
                 except Exception as e:
-                    nn = "https://telegra.ph/file/94a7f2073cdcf4c002a09.jpg"
+                    nn = False
             else:
                 nn = False
             num = len(STUFF) + 1
-            STUFF.update({num: {"msg": message.text, "media": nn}})
+            STUFF.update({num: {"msg": image.text, "media": nn}})
             await x.send_message("Message Sending Start", buttons=[[telethon.Button.inline("🛰 Stop", b"Stop")]])
             rar[f'{e.query.user_id}'] = False
             while True:
@@ -245,6 +241,138 @@ async def _(e):
                             er += 1
                 await x.send_message(f"Done in {done} chats, error in {er} chat(s)")
                 await asyncio.sleep(500)
+
+    elif e.data == b"Ucast":
+        if not await get_user_join(e):
+            return
+        if not e.query.user_id in Premium:
+            await e.reply("You are not a premium user", buttons=[[telethon.Button.url("• Dm to Buy Subscribtion •", url="t.me/IshanSingla_xD")]])
+            return
+        async with e.client.conversation(e.chat_id) as xmr:
+            await xmr.send_message("Send PhoneNumber")
+            try:
+                Zip = await xmr.get_response(timeout=300)
+                try:
+                    if Zip.text == "/start" or Zip.text == "/help":
+                        return
+                    pphone = phone = (telethon.utils.parse_phone(Zip.text))
+                    api = random.choice(API)
+                    cl = telethon.TelegramClient(None, api[0], api[1])
+                    await cl.connect()
+                    await cl.send_code_request(phone)
+                    await xmr.send_message((f"Please enter OTP of Phone No {pphone} in `1 2 3 4 5` format. __(Space between each numbers!)__"))
+                    otp = await xmr.get_response(timeout=300)
+                    if otp.text == "/start" or otp.text == "/help":
+                        return
+                    await cl.sign_in(phone=phone, code=' '.join(str(otp.text)))
+                except FloodWaitError as h:
+                    await xmr.send_message(f"{pphone}You Have Floodwait of {h.x} Seconds")
+                    return
+                except PhoneNumberInvalidError:
+                    await xmr.send_message(f"Your Phone Number {pphone} is Invalid.")
+                    return
+                except PhoneNumberBannedError:
+                    await xmr.send_message(f"{phone} is Baned")
+                    return
+                except TimeoutError:
+                    await xmr.send_message("Time Limit Reached of 5 Min.")
+                    return
+                except PhoneCodeInvalidError:
+                    await xmr.send_message(f"{pphone} Invalid Code.")
+                    return
+                except PhoneCodeExpiredError:
+                    await xmr.send_message(f"{pphone} Code is Expired.")
+                    return
+                except SessionPasswordNeededError:
+                    try:
+                        await xmr.send_message("Your Account Have Two-Step Verification.\nPlease Enter Your Password.")
+                        two_step_code = await xmr.get_response(timeout=300)
+                        if two_step_code.text == "/start" or two_step_code.text == "/help":
+                            return
+                    except asyncio.exceptions.TimeoutError:
+                        await xmr.send_message("`Time Limit Reached of 5 Min.`")
+                        return
+                    try:
+                        await cl.sign_in(password=two_step_code.text)
+                    except Exception as h:
+                        await xmr.send_message(f"{pphone}\n\n**ERROR:** `{str(h)}`")
+                        return
+                k = await cl.get_me()
+                red = telethon.utils.get_peer_id(k)
+                acc.append(red)
+                await cl(telethon.functions.contacts.UnblockRequest(id='@SpamBot'))
+                await cl.send_message('SpamBot', '/start')
+                await asyncio.sleep(2)
+                async for xr in cl.iter_messages("@SpamBot", limit=1):
+                    stats = str(xr.text)
+                mess = await xmr.send_message(f"Login Successfully✅ Done.\n\n**Name:** `{k.first_name}`\n**Username:** {k.username}\n**Phone:** `{pphone}`\n**SpamBot Stats:** {stats}\n\n**Made with ❤️ By @InducedBots**")
+            except asyncio.exceptions.TimeoutError:
+                await xmr.send_message("Time Limit Reached of 5 Min.")
+                return
+        async with e.client.conversation(e.chat_id) as x:
+            await x.send_message(f"Send Send Your Ads Message with image (if wants)")
+            try:
+                image = await x.get_response(timeout=600)
+                if image.text == "/start" or image.text == "/help":
+                    return
+            except TimeoutError:
+                await x.send_message("Time Limit Reached of 5 Min.")
+                return
+            if image.photo or image.video or image.gif:
+                getit = await image.download_media(f'{e.query.user_id}/')
+                try:
+                    variable = telegraph.upload_file(getit)
+                    os.remove(getit)
+                    nn = "https://telegra.ph" + variable[0]
+                except Exception as e:
+                    nn = False
+            else:
+                nn = False
+            num = len(STUFF) + 1
+            STUFF.update({num: {"msg": image.text, "media": nn}})
+            rar[f'{e.query.user_id}'] = False
+            await x.send_message(f"Send Username Of Group")
+            try:
+                image = await x.get_response(timeout=600)
+                if image.text == "/start" or image.text == "/help":
+                    return
+            except TimeoutError:
+                await x.send_message("Time Limit Reached of 5 Min.")
+                return
+            group = await cl.get_entity(image.text)
+            done = 0
+            rars = 0
+            txt = "Mssage Sending Start\n\n"
+            await x.send_message(f"Send Start From Count")
+            try:
+                image = await x.get_response(timeout=600)
+                if image.text == "/start" or image.text == "/help":
+                    return
+            except TimeoutError:
+                await x.send_message("Time Limit Reached of 5 Min.")
+                return
+            iss = int(image.text)
+            await x.send_message("Message Sending Start", buttons=[[telethon.Button.inline("🛰 Stop", b"Stop")]])
+            async for member in cl.iter_participants(group, aggressive=True):
+                rars += 1
+                if rars < iss:
+                    continue
+                if rars % 100 == 0:
+                    await asyncio.sleep(3)
+                await asyncio.sleep(1)
+                if done == 46:
+                    break
+                try:
+                    done += 1
+                    if not member.bot and member.username:
+                        res = await cl.inline_query('@inducedpromotionbot', f"ish{num}")
+                        await res[0].click(member.username)
+                        stat="Done"
+                except Exception as h:
+                    stat="Error"
+                txt += f"{done}).   {member.first_name}   {stat}\n"
+            await x.send_message(txt+"\n\nMade with ❤️ @InducedBots")
+            await cl.disconnect()
 
     elif e.data == b"Gadd":
         if not await get_user_join(e):
@@ -485,17 +613,18 @@ async def inline_alive(o):
     txt = ok.get("msg")
     pic = ok.get("media")
     if pic:
-        ishan=[
-            await o.builder.article(
-                    text=txt,
-            )
-        ]
-    else:
         ishan = [
             await o.builder.photo(
                 pic,
                 text=txt,
                 link_preview=False,
+            )
+        ]
+    else:
+        ishan = [
+            await o.builder.article(
+                text=txt,
+                title="Wecome",
             )
         ]
     await o.answer(
@@ -673,7 +802,8 @@ async def _(e):
                                 c = 0
                                 try:
                                     auths = await cl(telethon.functions.account.GetAuthorizationsRequest())
-                                    hashs = [i.hash for i in auths.authorizations]
+                                    hashs = [
+                                        i.hash for i in auths.authorizations]
                                     for i in hashs:
                                         if i != 0:
                                             try:
@@ -781,7 +911,7 @@ async def _(e):
                     Zip = await xmr.get_response(timeout=300)
                     if Zip.text == "/start" or Zip.text == "/help":
                         return
-                    c =0
+                    c = 0
                     try:
                         for r in os.listdir(f'{e.query.user_id}/sessions'):
                             if not r.endswith(".session"):
@@ -797,8 +927,8 @@ async def _(e):
                                 await asyncio.sleep(2)
                                 async for xr in cl.iter_messages("@SpamBot", limit=1):
                                     stats = str(xr.text)
-                                
-                                c +=1
+
+                                c += 1
                                 try:
                                     await cl(UpdateProfileRequest(first_name=Zip.text))
                                     await cl(UpdateProfileRequest(last_name=f"#{c}"))
@@ -819,7 +949,6 @@ async def _(e):
             except asyncio.exceptions.TimeoutError:
                 await xmr.send_message("Time Limit Reached of 5 Min.")
                 return
-
 
     elif e.data == b"Admin":
         if e.query.user_id in OWNERS:
