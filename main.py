@@ -13,6 +13,7 @@ import telegraph
 from telethon.tl.functions.account import UpdateProfileRequest
 from telethon.errors.rpcerrorlist import PhoneCodeExpiredError, FloodWaitError, PhoneCodeInvalidError, PhoneNumberBannedError, PhoneNumberInvalidError, SessionPasswordNeededError
 from firebase_admin import credentials, db, initialize_app
+
 text = """
 ---------------------------------
     ╔════╗
@@ -25,6 +26,7 @@ text = """
     ╚════╝ 
 ---------------------------------
 """
+
 with open("log.txt", "w") as f:
     f.write(text)
 
