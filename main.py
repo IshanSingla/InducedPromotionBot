@@ -73,6 +73,7 @@ for row in Sub:
         datetime.datetime.strptime("2021-11-03", '%Y-%m-%d')
     if d <= r:
         Premium.append(int(row[0]))
+        
 start_time = time.time()
 rar = {}
 rare = {}
