@@ -592,7 +592,7 @@ async def inline_alive(o):
             buttons=[
                 [
                     telethon.Button.url("• Dm to Buy •", url="t.me/IshanSingla_xD"),
-                    telethon.Button.url("• Tutorial •", url="t.me/IshanSingla_xD")
+                    telethon.Button.url("• Tutorial •", url="https://www.youtube.com/watch?v=BvNVBo19fCg&list=PLkgZrmKoUMYQtw6Acj2gvFEpZNvUATHKp&index=1")
                 ]
             ],
             link_preview=False,
