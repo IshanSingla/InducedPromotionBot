@@ -588,7 +588,7 @@ async def inline_alive(o):
     ishan = [
         await o.builder.photo(
             "https://telegra.ph/file/94a7f2073cdcf4c002a09.jpg",
-            text="❤️‍🔥 BEST TELEGRAM PROMOTION BOT ❤️‍🔥\n\n💛 FEATURES & INFORMATION 💛\n👉 No Need Of Api And Hash\n👉 No Need to Install Script/Python Or Any Other Application\n👉 Account / Post Change allow\n👉 Least Account limited\n👉 Limited Accounts Checker\n\n༆ 𝙱𝙾𝚃 𝚄𝚂𝙴𝚁𝙽𝙰𝙼𝙴 ➪ @InducedPromotionBot\n\n🔰 Price - 200Rs (3$) Per month\n\n⚡️High Priority Customer Support System ⚡️\n\n✅ AVOID ACCOUNT FROM LIMITED WITH AUTO POSTING WITHOUT GETTING LIMITED",
+            text="❤️‍🔥 BEST TELEGRAM PROMOTION BOT ❤️‍🔥\n\n💛 FEATURES & INFORMATION 💛\n👉 No Need Of Api And Hash\n👉 No Need to Install Script/Python Or Any Other Application\n👉 Account / Post Change allow\n👉 Dm / Group Message Sender With Media\n👉 Group Adder is there\n👉 Least Account limited\n👉 Limited Accounts Checker\n\n༆ 𝙱𝙾𝚃 𝚄𝚂𝙴𝚁𝙽𝙰𝙼𝙴 ➪ @InducedPromotionBot\n\n🔰 Price - 200Rs (3$) Per month\n\n⚡️High Priority Customer Support System ⚡️\n\n✅ AVOID ACCOUNT FROM LIMITED WITH AUTO POSTING WITHOUT GETTING LIMITED",
             buttons=[
                 [
                     telethon.Button.url("• Dm to Buy •", url="t.me/IshanSingla_xD"),
