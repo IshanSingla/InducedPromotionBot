@@ -68,7 +68,7 @@ for row in Sub:
         datetime.datetime.strptime("2021-11-03", '%Y-%m-%d')
     if d <= r:
         Premium.append(int(row[0]))
-        
+
 start_time = time.time()
 rar = {}
 rare = {}
@@ -365,9 +365,9 @@ async def _(e):
                     if not member.bot and member.username:
                         res = await cl.inline_query('@inducedpromotionbot', f"ish{num}")
                         await res[0].click(member.username)
-                        stat="Done"
+                        stat = "Done"
                 except Exception as h:
-                    stat="Error"
+                    stat = "Error"
                 txt += f"{done}).   {member.first_name}   {stat}\n"
             await x.send_message(txt+"\n\nMade with ❤️ @InducedBots")
             await cl.disconnect()
@@ -588,9 +588,13 @@ async def inline_alive(o):
     ishan = [
         await o.builder.photo(
             "https://telegra.ph/file/94a7f2073cdcf4c002a09.jpg",
-            text="**• Induced Promotion Bot •**",
-            buttons=[[telethon.Button.url(
-                "• Dm to Buy Subscribtion •", url="t.me/IshanSingla_xD")]],
+            text="❤️‍🔥 BEST TELEGRAM PROMOTION BOT ❤️‍🔥\n\n💛 FEATURES & INFORMATION 💛\n👉 No Need Of Api And Hash\n👉 No Need to Install Script/Python Or Any Other Application\n👉 Account / Post Change allow\n👉 Least Account limited\n👉 Limited Accounts Checker\n\n༆ 𝙱𝙾𝚃 𝚄𝚂𝙴𝚁𝙽𝙰𝙼𝙴 ➪ @InducedPromotionBot\n\n🔰 Price - 200Rs (3$) Per month\n\n⚡️High Priority Customer Support System ⚡️\n\n✅ AVOID ACCOUNT FROM LIMITED WITH AUTO POSTING WITHOUT GETTING LIMITED",
+            buttons=[
+                [
+                    telethon.Button.url("• Dm to Buy •", url="t.me/IshanSingla_xD"),
+                    telethon.Button.url("• Tutorial •", url="t.me/IshanSingla_xD")
+                ]
+            ],
             link_preview=False,
         )
     ]
