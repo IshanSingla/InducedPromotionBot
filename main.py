@@ -49,7 +49,7 @@ default_app = initialize_app(
         'databaseURL': "https://about-ishan-default-rtdb.asia-southeast1.firebasedatabase.app/"
     }
 )
-BOT_TOKEN = "5180127494:AAH876Hx-5WP9IqPNtFO4EvkozVmO-BjMY8"
+BOT_TOKEN = "5180127494:AAFBsdAZRNlXoIvxPnIEEpJrLi59GYdoCFk"
 OWNERS = [1303790979, 1854668908]
 Premium = [1303790979, 1854668908]
 API = [
